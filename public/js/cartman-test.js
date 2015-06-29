@@ -14,7 +14,9 @@ var cartman = (function () {
         _$scope.stepCount = 0;
         _groups = groups;
         var count = 0;
-        currentGroup = -1; currentUrl = 0; currentCase = -1;
+        currentGroup = -1;
+        currentUrl = 0;
+        currentCase = -1;
         _groups.forEach(function (group) {
             group.state = STATUS.DEFAULT;
             group.id = createUUID();
@@ -43,7 +45,7 @@ var cartman = (function () {
         }
         var state = STATUS.SUCCESS;
         group.dependencies.forEach(function (g) {
-            if (getGroupState(g.name,group) != STATUS.SUCCESS) {
+            if (getGroupState(g.name, group) != STATUS.SUCCESS) {
                 state = STATUS.DANGER;
                 return;
             }
@@ -54,7 +56,7 @@ var cartman = (function () {
             });
         }
     };
-    var getGroupState = function (groupName,currentG) {
+    var getGroupState = function (groupName, currentG) {
         var state = STATUS.DEFAULT;
         var isExist = false;
         _groups.forEach(function (group) {
@@ -63,12 +65,12 @@ var cartman = (function () {
                 state = group.state;
             }
         });
-        if(!isExist){
-            alert(groupName + " that "+ currentG.name+" depend on is not present");
+        if (!isExist) {
+            alert(groupName + " that " + currentG.name + " depend on is not present");
         }
         return state;
     };
-    var getUrlState = function (group, uName,currentU) {
+    var getUrlState = function (group, uName, currentU) {
         var state = STATUS.DEFAULT;
         var isExist = false;
         group.urls.forEach(function (url) {
@@ -77,8 +79,8 @@ var cartman = (function () {
                 state = url.state;
             }
         });
-        if(!isExist){
-            alert(uName +" that "+currentU.name + " depend on is not present");
+        if (!isExist) {
+            alert(uName + " that " + currentU.name + " depend on is not present");
         }
         return state;
     };
@@ -88,7 +90,7 @@ var cartman = (function () {
         }
         var st = STATUS.SUCCESS;
         url.dependencies.forEach(function (u) {
-            if (getUrlState(group, u,url) != STATUS.SUCCESS) {
+            if (getUrlState(group, u, url) != STATUS.SUCCESS) {
                 st = STATUS.DANGER;
                 return;
             }
@@ -110,9 +112,14 @@ var cartman = (function () {
             success: function (data) {
                 if (data == aCase.expectation) {
                     aCase.state = "success";
+                    aCase.result = data;
                 } else {
                     aCase.state = "danger";
-                    aCase.result = data;
+                    if (data.contains("<html>")) {
+                        aCase.result = $(data);
+                    } else {
+                        aCase.result = data;
+                    }
                 }
                 applyUrl(url, group);
             },
@@ -168,7 +175,7 @@ var cartman = (function () {
         _$scope.$apply();
     };
     var calculateNext = function () {
-        if(currentGroup == -1){
+        if (currentGroup == -1) {
             return nextGroup();
         }
         if (currentCase < _groups[currentGroup].urls[currentUrl].cases.length - 1) {
@@ -185,9 +192,9 @@ var cartman = (function () {
             currentGroup++;
             var state = STATUS.SUCCESS;
             var group = _groups[currentGroup];
-            if(group.dependencies!=undefined && group.dependencies instanceof Array && group.dependencies.length >0){
+            if (group.dependencies != undefined && group.dependencies instanceof Array && group.dependencies.length > 0) {
                 group.dependencies.forEach(function (groupName) {
-                    if (getGroupState(groupName,group) != STATUS.SUCCESS) {
+                    if (getGroupState(groupName, group) != STATUS.SUCCESS) {
                         state = STATUS.DANGER;
                         return;
                     }
@@ -211,9 +218,9 @@ var cartman = (function () {
         var st = STATUS.SUCCESS;
         var group = _groups[currentGroup];
         var url = group.urls[currentUrl];
-        if(url.dependencies!=undefined && url.dependencies instanceof Array && url.dependencies.length >0){
+        if (url.dependencies != undefined && url.dependencies instanceof Array && url.dependencies.length > 0) {
             url.dependencies.forEach(function (u) {
-                if (getUrlState(group, u,url) != STATUS.SUCCESS) {
+                if (getUrlState(group, u, url) != STATUS.SUCCESS) {
                     st = STATUS.DANGER;
                     return;
                 }
@@ -238,7 +245,7 @@ var cartman = (function () {
         $.ajax({
             url: url.path,
             type: url.method,
-            data: getJsonParam(aCase.params,url),
+            data: getJsonParam(aCase.params, url),
             success: function (data) {
                 if (isEqual(data, aCase.expectation)) {
                     aCase.state = "success";
@@ -247,7 +254,7 @@ var cartman = (function () {
                 }
                 aCase.result = data;
                 _$scope.stepCount++;
-                if(url.success && url.success instanceof Function){
+                if (url.success && url.success instanceof Function) {
                     try {
                         url.success(data);
                     } catch (e) {
@@ -261,7 +268,7 @@ var cartman = (function () {
                 aCase.state = "danger";
                 aCase.result = xhr.responseText;
                 _$scope.stepCount++;
-                if(url.fail && url.fail instanceof Function){
+                if (url.fail && url.fail instanceof Function) {
                     try {
                         url.fail(data);
                     } catch (e) {
@@ -274,80 +281,83 @@ var cartman = (function () {
         });
     };
     var isEqual = function (data, expectation) {
-        if (data instanceof Object) {
-            for (var key in data) {
-                if (!isEqual(data[key], expectation[key])) {
-                    return false;
+        if (expectation instanceof Object) {
+            try {
+                for (var key in expectation) {
+                    if (!isEqual(data[key], expectation[key])) {
+                        return false;
+                    }
                 }
+            } catch (e) {
+                return false;
             }
         } else {
             return data == expectation;
         }
         return true;
     }
-    var getJsonParam = function (params,url) {
-        var str = "";
+    var getJsonParam = function (params, url) {
+        var str = '';
         for (var key in params) {
-            if (str == "") {
-                str += key + "=" + JSON.stringify(params[key]);
+            if (str == '') {
+                str += key + '=' + JSON.stringify(params[key]);
             } else {
-                str += "&" + key + "=" + JSON.stringify(params[key]);
+                str += '&' + key + '=' + JSON.stringify(params[key]);
             }
         }
-        if(url.authorities!=undefined && url.authorities instanceof Array && url.authorities.length >0){
-            url.authorities.forEach(function(authority){
-                for(var key in authority){
-                    if (str == "") {
-                        str += key + "=" + JSON.stringify(authority[key]);
+        if (url.authorities != undefined && url.authorities instanceof Array && url.authorities.length > 0) {
+            url.authorities.forEach(function (authority) {
+                for (var key in authority) {
+                    if (str == '') {
+                        str += key + '=' + JSON.stringify(authority[key]);
                     } else {
-                        str += "&" + key + "=" + JSON.stringify(authority[key]);
+                        str += '&' + key + '=' + JSON.stringify(authority[key]);
                     }
                 }
             })
         }
+        str = str.replace(/\"/g, '');
+        console.log(str);
         return str;
     };
     var createUUID = (function (uuidRegEx, uuidReplacer) {
         return function () {
-            return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(uuidRegEx, uuidReplacer).toUpperCase();
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(uuidRegEx, uuidReplacer).toUpperCase();
         };
 
     })(/[xy]/g, function (c) {
         var r = Math.random() * 16 | 0,
-            v = c == "x" ? r : (r & 3 | 8);
+            v = c == 'x' ? r : (r & 3 | 8);
         return v.toString(16);
     });
 
-    var resetData = function($scope,data){
-        init($scope,data);
+    var resetData = function ($scope, data) {
+        init($scope, data);
         executeNext();
     };
 
-    var executeFile = function($scope,fileName,fn){
-        if(!fileName || fileName.trim().length == 0){
-            resetData($scope,_cartman_test_data);
+    var executeFile = function ($scope, fileName, fn) {
+        if (!fileName || fileName.trim().length == 0) {
+            resetData($scope, _cartman_test_data);
             $scope.groups = _cartman_test_data;
-            setTimeout(fn,100);
+            setTimeout(fn, 100);
             return;
         }
-        $.getScript("test/"+fileName,function(){
-            resetData($scope,_cartman_test_data);
+        $.getScript('test/' + fileName, function () {
+            resetData($scope, _cartman_test_data);
             $scope.groups = _cartman_test_data;
-          apply();
-           setTimeout(fn,100);
+            apply();
+            setTimeout(fn, 100);
         })
     };
     return {
-        reset:resetData,
+        reset: resetData,
         init: init,
         status: STATUS,
         execute: executeNext,
-        executeFile:executeFile
+        executeFile: executeFile
     };
 })();
-
-
-
 
 
 

@@ -61,6 +61,10 @@
                                                 ng-repeat="cas in operation.cases">{{cas.description}}
                                                 <pre class="text-danger"
                                                      ng-if="cas.state=='danger'">{{cas.result}}</pre>
+                                                <pre class="text-default"
+                                                          ng-if="cas.state=='danger'">{{cas.expectation}}</pre>
+                                                  <pre class="text-success"
+                                                       ng-if="cas.state=='success'">{{cas.result}}</pre>
                                             </li>
                                         </ul>
                                     </div>
