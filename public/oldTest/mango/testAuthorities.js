@@ -1,9 +1,7 @@
 var _cartman_test_servers = [
     'localhost:8080'
 ]
-var authorizes = [
-{name:"无"}
-]
+var authorizes = []
 
 
 var _cartman_test_authorizes = {
