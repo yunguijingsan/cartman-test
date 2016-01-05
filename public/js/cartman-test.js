@@ -265,22 +265,30 @@ var cartman = (function () {
                 executeNext();
             },
             error: function (xhr) {
-                aCase.state = "danger";
-                aCase.result = xhr.responseText;
-                _$scope.stepCount++;
-                if (url.fail && url.fail instanceof Function) {
-                    try {
-                        url.fail(data);
-                    } catch (e) {
-                        console.log(e)
+                if(aCase.expectation == null){
+                    aCase.state = "success";
+                    aCase.result = xhr.responseText;
+                }   else{
+                    aCase.state = "danger";
+                    aCase.result = xhr.responseText;
+                    if (url.fail && url.fail instanceof Function) {
+                        try {
+                            url.fail(data);
+                        } catch (e) {
+                            console.log(e)
+                        }
                     }
                 }
+                _$scope.stepCount++;
                 applyUrl(url, group);
                 executeNext();
             }
         });
     };
     var isEqual = function (data, expectation) {
+        if(expectation == null){
+            return true;
+        }
         if (expectation instanceof Object) {
             try {
                 for (var key in expectation) {
@@ -297,7 +305,10 @@ var cartman = (function () {
         return true;
     }
     var getJsonParam = function (params, url) {
-        var str = '';
+        if(Object.prototype.toString.call(params) == "[object String]" ){
+            return params;
+        }
+        var str ='';
         for (var key in params) {
             if (str == '') {
                 str += key + '=' + JSON.stringify(params[key]);
@@ -317,7 +328,6 @@ var cartman = (function () {
             })
         }
         str = str.replace(/\"/g, '');
-        console.log(str);
         return str;
     };
     var createUUID = (function (uuidRegEx, uuidReplacer) {

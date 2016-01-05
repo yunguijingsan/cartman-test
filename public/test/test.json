@@ -1,0 +1,14 @@
+{
+  "status": 1,
+  "resultCode": 0,
+  "message": "ok",
+  "data": {
+    "autoPay": true,
+    "balance": 0,
+    "autoPushWeixin": true,
+    "nickName": null,
+    "firstCarNo": "粤A12345",
+    "autoPushApp": true,
+    "mobile": 18820408616
+  }
+}

@@ -2,43 +2,44 @@ var express = require('express');
 var querystring = require('querystring');
 var http = require('http');
 var bodyParser = require('body-parser');
-var is   = require('type-is');
+var is = require('type-is');
 var iconv = require('iconv-lite');
 
 var app = express();
 
-var proxyServer = "localhost";
+//var proxyServer = "172.18.44.244";
+var proxyServer = "172.18.33.99";
 var proxyDomain = "";
 var proxyServerPort = 8080;
+var CARTMAN_TEST_SERVER = "_cartman_test_server=";
 
 app.use(bodyParser.text());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 app.disable('etag');
-app.use(express.static(__dirname + '/public'));
-
+app.use(express.static('public'));
 
 var fs = require("fs")
-app.use("/cartman_test_file",function(req,res){
-    var testFiles = fs.readdirSync(__dirname+"/public/test");
-    testFiles = testFiles.filter(function(ele){
-        return ".js" == ele.substr(ele.length-3,3);
+app.use("/cartman_test_file", function (req, res) {
+    var testFiles = fs.readdirSync(__dirname + "/public/test");
+    testFiles = testFiles.filter(function (ele) {
+        return ".js" == ele.substr(ele.length - 3, 3);
     })
     res.send(testFiles);
 })
 
 app.use(function (req, res) {
-    if(req.url == "/favicon.ico"){
+    if (req.url == "/favicon.ico") {
         return;
     }
     var method = req.method.toUpperCase();
-    console.log(new Date().getTime()+ "    " +method + "    "+req.url +" request start");
+    console.log(new Date().getTime() + "    " + method + "    " + req.url + " request start");
     if (req.method.toUpperCase() == "GET") {
-        getProxy(req,res);
+        getProxy(req, res);
     } else if (req.method.toUpperCase() == "POST") {
-        postProxy(req,res);
-    }else{
-        postProxy(req,res)
+        postProxy(req, res);
+    } else {
+        postProxy(req, res)
     }
 })
 function getProxy(req, res) {
@@ -55,28 +56,45 @@ function getProxy(req, res) {
             "X-Real-IP": req.ip
         }
     };
-    proxy(req,res,opt,data);
+    proxy(req, res, opt, data);
 }
 function getJsonParam(body) {
     var str = "";
-    for(var key in body){
-        if(str == ""){
-            str += key+"="+JSON.stringify(body[key]);
-        }else{
-            str += "&"+key+"="+JSON.stringify(body[key]);
+    for (var key in body) {
+        if (str == "") {
+            str += key + "=" + JSON.stringify(body[key]);
+        } else {
+            str += "&" + key + "=" + JSON.stringify(body[key]);
         }
     }
     return str;
 }
 function postProxy(req, res) {
     var proxyPath = req.url;
-    if(is(req,['json'])){
-       var data =getJsonParam(req.body);
-    }else{
+    if (is(req, ['json'])) {
+        var data = getJsonParam(req.body);
+    } else {
         var data = require("querystring").stringify(req.body);
     }
-    data = iconv.encode(data,"UTF-8");
-    console.log(data.length + "  "+data) ;
+    if (data.indexOf(CARTMAN_TEST_SERVER)>0) {
+        var start = data.indexOf(CARTMAN_TEST_SERVER);
+        var str = data.substr(start + CARTMAN_TEST_SERVER.length);
+        var end = str.indexOf("&");
+        var server = "";
+        if (end > 0) {
+            server = str.substring(0, end);
+        } else {
+            server = str;
+        }
+       var strs =  server.split("%3A")
+
+        proxyServer = strs[0];
+        proxyServerPort = strs[1];
+    } else {
+
+    }
+    data = iconv.encode(data, "UTF-8");
+    console.log(data.length + "  " + data);
     var opt = {
         method: "POST",
         host: proxyServer,
@@ -90,32 +108,32 @@ function postProxy(req, res) {
         },
         secureProtocol: 'SSLv3_method'
     };
-    proxy(req,res,opt,data,true);
+    proxy(req, res, opt, data, true);
 }
 
-function proxy(req,res,opt,data,isPost){
+function proxy(req, res, opt, data, isPost) {
     var req_proxy = http.request(opt, function (serverFeedback) {
         var body = "";
         serverFeedback.on('data', function (data) {
             body += data;
         })
             .on('end', function () {
-                console.log(new Date().getTime()+ "    " +req.method + "    "+req.url +" request finish");
+                console.log(new Date().getTime() + "    " + req.method + "    " + req.url + " request finish");
                 res.set('Pragma', 'no-cache');
                 res.set('Cache-Control', 'no-cache');
                 res.set('Expires', '0');
                 res.set('Content-Type', 'application/json');
                 res.status(serverFeedback.statusCode).send(body);
             })
-    }).on('error',function(data){
-        console.log(new Date().getTime()+ "    " +req.method + "    "+req.url +" request finish");
+    }).on('error', function (data) {
+        console.log(new Date().getTime() + "    " + req.method + "    " + req.url + " request finish");
         res.status(400).send(data);
     });
-    if(isPost){
-        req_proxy.write(data +"\n");
+    if (isPost) {
+        req_proxy.write(data + "\n");
     }
     req_proxy.end();
 }
-var server = app.listen(3000, function() {
+var server = app.listen(3000, function () {
     console.log('Express server listening on port ' + server.address().port);
 });

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>海鸥后台</title>
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/index.css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/bootstrap.js"></script>
+<script type="text/javascript" src="js/angular.js"></script>
+<script type="text/javascript" src="js/angular-route.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+</head>
+<body ng-app="mainApp">
+	<header id="top">
+
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-3">
+				<div class="list-group">
+					<div class="list-group-item">
+						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+						<a href="#alpha">A页面</a>
+					</div>
+					<div class="list-group-item">
+						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+						<a href="#beta">B页面</a>
+					</div>
+					<div class="list-group-item">
+						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+						<a href="#cigema">C页面</a>
+					</div>
+					<div class="list-group-item">
+						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+						<a href="#d">默认页面</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-9">
+
+				<div ng-view>  {{message}}</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

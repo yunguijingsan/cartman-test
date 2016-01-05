@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="practice/testWebSocket.js"></script>
+</head>
+<body>
+          <button>alert</button>
+</body>
+<script src="./js/jquery.min.js"></script>
+<script>
+
+    // 所有按钮的点击事件处理
+    $("html").on("click","button",function() {
+        alert( "Button Clicked!" )
+    });
+    /* ... 一段时间后... */
+    // 动态将别的按钮添加到页面
+    $("html" ).append( "<button>Click Alert!</button>" );
+    setTimeout(function(){
+        $("html" ).append( "<button>Click Alert!TimeOut</button>" );
+    },1000)
+</script>
+</html>

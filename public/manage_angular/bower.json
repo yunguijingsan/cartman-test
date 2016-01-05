@@ -1,0 +1,33 @@
+{
+  "name": "OA_angular",
+  "description": "Install components for OA_angular project",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.7",
+    "angular-ui-router": "~0.2.15",
+    "angular-resource": "~1.4.7",
+    "underscore": "~1.8.3",
+    "Swiper": "swiper#~3.2.0",
+    "bootstrap": "~3.3.5",
+    "font-awesome": "~4.4.0"
+  },
+  "overrides": {
+    "bower-package": {
+      "main": {
+        "development": "file.js",
+        "production": "file.min.js"
+      }
+    }
+  }
+}

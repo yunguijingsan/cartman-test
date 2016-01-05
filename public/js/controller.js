@@ -6,9 +6,10 @@ function TestAllCrl($http, $scope) {
     $scope.runStepCount = 10;
     $scope.stepCount = 0;
     $scope.testFiles =[];
+    $scope.servers=_cartman_test_servers;
+    $scope.authorities=authorizes;
     $http.get("/cartman_test_file").success(function(data){
         $scope.testFiles = data;
-        $scope.$apply();
         if(data.length>0){
             cartman.executeFile($scope,data[0],init);
         }
@@ -23,6 +24,24 @@ $(function () {
 })
 
 function init() {
+    $("#testServer").change(function(){
+        _cartman_test_authorizes._cartman_test_server = $(this).val().trim();
+    })
+    _cartman_test_authorizes._cartman_test_server =    $("#testServer").val().trim();
+    $("#testAuthorizes").change(function(){
+        for(var i=0;i<authorizes.length;i++){
+            var authority = authorizes[i];
+              if(authority.name == $(this).val().trim()){
+                  authority._cartman_test_server = _cartman_test_authorizes._cartman_test_server;
+                  _cartman_test_authorizes = authority.authority;
+                  _cartman_test_authorizes._cartman_test_server = authority._cartman_test_server
+                  console.log(_cartman_test_authorizes);
+                  break;
+              }
+        }
+        console.log(_cartman_test_authorizes);
+        return false;
+    })
 //    $(".collapse").collapse("show");
     var isToggle = false;
     $("button[name='group']").click(function () {
