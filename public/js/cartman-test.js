@@ -154,17 +154,17 @@ var cartman = (function () {
     var applyGroup = function (group) {
         var i = 0;
         group.urls.forEach(function (url) {
-            if (url.state == STATUS.DEFAULT) {
+//          if (url.state == STATUS.DEFAULT) {
 //                executeUrl(url,group);
-            } else {
-                if (url.state == STATUS.DANGER) {
-                    group.state = STATUS.DANGER;
-                    return;
-                }
+//          } else {
+//              if (url.state == STATUS.DANGER) {
+//                  group.state = STATUS.DANGER;
+//                  return;
+//              }
                 if (url.state == STATUS.SUCCESS) {
                     i++;
                 }
-            }
+//          }
         });
         if (i == group.urls.length) {
             group.state = STATUS.SUCCESS;
@@ -248,9 +248,9 @@ var cartman = (function () {
             data: getJsonParam(aCase.params, url),
             success: function (data) {
                 if (isEqual(data, aCase.expectation)) {
-                    aCase.state = "success";
+                    aCase.state = STATUS.SUCCESS;
                 } else {
-                    aCase.state = "danger";
+                    aCase.state = STATUS.DANGER;
                 }
                 aCase.result = data;
                 _$scope.stepCount++;
@@ -266,10 +266,10 @@ var cartman = (function () {
             },
             error: function (xhr) {
                 if(aCase.expectation == null){
-                    aCase.state = "success";
+                    aCase.state = STATUS.SUCCESS;
                     aCase.result = xhr.responseText;
                 }   else{
-                    aCase.state = "danger";
+                    aCase.state =STATUS.DANGER;
                     aCase.result = xhr.responseText;
                     if (url.fail && url.fail instanceof Function) {
                         try {
