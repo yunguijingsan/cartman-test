@@ -39,26 +39,25 @@ var cartman = (function() {
 		//        _groups.forEach(function(group){
 		//            executeGroup(group);
 		//        })
-		apply();
 
 	};
-//	var executeGroup = function(group) {
-//		if (group.state != STATUS.DEFAULT) {
-//			return;
-//		}
-//		var state = STATUS.SUCCESS;
-//		group.dependencies.forEach(function(g) {
-//			if (getGroupState(g.name, group) != STATUS.SUCCESS) {
-//				state = STATUS.DANGER;
-//				return;
-//			}
-//		});
-//		if (state == STATUS.SUCCESS) {
-//			group.urls.forEach(function(url) {
-//				executeUrl(url, group);
-//			});
-//		}
-//	};
+	var executeGroup = function(group) {
+		if (group.state != STATUS.DEFAULT) {
+			return;
+		}
+		var state = STATUS.SUCCESS;
+		group.dependencies.forEach(function(g) {
+			if (getGroupState(g.name, group) != STATUS.SUCCESS) {
+				state = STATUS.DANGER;
+				return;
+			}
+		});
+		if (state == STATUS.SUCCESS) {
+			group.urls.forEach(function(url) {
+				executeUrl(url, group);
+			});
+		}
+	};
 	var getGroupState = function(groupName, currentG) {
 		var state = STATUS.DEFAULT;
 		var isExist = false;
@@ -87,52 +86,52 @@ var cartman = (function() {
 		}
 		return state;
 	};
-//	var executeUrl = function(url, group) {
-//		if (url.state != STATUS.DEFAULT) {
-//			return;
-//		}
-//		var st = STATUS.SUCCESS;
-//		url.dependencies.forEach(function(u) {
-//			if (getUrlState(group, u, url) != STATUS.SUCCESS) {
-//				st = STATUS.DANGER;
-//				return;
-//			}
-//		});
-//		if (st == STATUS.SUCCESS) {
-//			url.cases.forEach(function(cas) {
-//				executeCase(cas, url, group);
-//			});
-//		}
-//	};
-//	var executeCase = function(aCase, url, group) {
-//		if (aCase.state != STATUS.DEFAULT) {
-//			return;
-//		}
-//		$.ajax({
-//			url: url.path,
-//			type: url.method,
-//			data: aCase.params,
-//			success: function(data) {
-//				if (data == aCase.expectation) {
-//					aCase.state = "success";
-//					aCase.result = data;
-//				} else {
-//					aCase.state = "danger";
-//					if (data.contains("<html>")) {
-//						aCase.result = $(data);
-//					} else {
-//						aCase.result = data;
-//					}
-//				}
-//				applyUrl(url, group);
-//			},
-//			error: function(xhr) {
-//				aCase.state = "danger";
-//				aCase.result = xhr.responseText;
-//				applyUrl(url, group);
-//			}
-//		});
-//	};
+	var executeUrl = function(url, group) {
+		if (url.state != STATUS.DEFAULT) {
+			return;
+		}
+		var st = STATUS.SUCCESS;
+		url.dependencies.forEach(function(u) {
+			if (getUrlState(group, u, url) != STATUS.SUCCESS) {
+				st = STATUS.DANGER;
+				return;
+			}
+		});
+		if (st == STATUS.SUCCESS) {
+			url.cases.forEach(function(cas) {
+				executeCase(cas, url, group);
+			});
+		}
+	};
+	var executeCase = function(aCase, url, group) {
+		if (aCase.state != STATUS.DEFAULT) {
+			return;
+		}
+		$.ajax({
+			url: url.path,
+			type: url.method,
+			data: aCase.params,
+			success: function(data) {
+				if (data == aCase.expectation) {
+					aCase.state = "success";
+					aCase.result = data;
+				} else {
+					aCase.state = "danger";
+					if (data.contains("<html>")) {
+						aCase.result = $(data);
+					} else {
+						aCase.result = data;
+					}
+				}
+				applyUrl(url, group);
+			},
+			error: function(xhr) {
+				aCase.state = "danger";
+				aCase.result = xhr.responseText;
+				applyUrl(url, group);
+			}
+		});
+	};
 	var applyUrl = function(url, group) {
 		var i = 0;
 		url.cases.forEach(function(cas) {
@@ -144,7 +143,7 @@ var cartman = (function() {
 					return;
 				}
 				if (cas.state == STATUS.SUCCESS) {
-					i++;
+					i++
 				}
 			}
 		});
@@ -239,30 +238,20 @@ var cartman = (function() {
 			return nextUrl();
 		}
 	};
-	
-	var getCurrentGroup = function (){
-		return _groups[currentGroup];
-	};
-	var getCurrentUrl = function(group){
-		return group.urls[currentUrl];
-	};
-	var getCurrentCase = function(url){
-		return url.cases[currentCase];
-	};
 	var executeNext = function() {
 		if (!calculateNext()) {
 			return false;
 		}
-		var group = getCurrentGroup();
-		var url =getCurrentUrl(group);
-		var aCase = getCurrentCase(url);
+		var group = _groups[currentGroup];
+		var url = group.urls[currentUrl];
+		var aCase = url.cases[currentCase];
 		if (aCase.state != STATUS.DEFAULT) {
 			return;
 		}
 		$.ajax({
-			url: url.path +"?_cartman_test_server="+_$scope.selectedServer,
+			url: url.path,
 			type: url.method,
-			async: _$scope.isAsync,
+			async: false,
 			data: getJsonParam(aCase.params, url),
 			success: function(data) {
 				aCase.result = JSON.stringify(data, null, " ");
@@ -273,6 +262,7 @@ var cartman = (function() {
 					aCase.state = STATUS.DANGER;
 				}
 				applyUrl(url, group);
+				executeNext();
 			},
 			error: function(xhr) {
 				if (aCase.expectation == null) {
@@ -285,31 +275,39 @@ var cartman = (function() {
 						try {
 							url.fail(data);
 						} catch (e) {
-							console.log(e);
+							console.log(e)
 						}
 					}
 				}
 				_$scope.stepCount++;
 				applyUrl(url, group);
-				
+				executeNext();
 			}
 		});
-		
-		executeNext();
 	};
 	var isSuccess = function(url, aCase, data) {
 		if (aCase.success && aCase.success instanceof Function) {
-				return aCase.success(data);
+				try {
+					return aCase.success(data);
+				} catch (e) {
+					console.log(e)
+				}
+				return undefined;
 			
 		} else {
 			if (url.success && url.success instanceof Function) {
-				return url.success(data);
+				try {
+					return url.success(data);
+				} catch (e) {
+					console.log(e)
+				}
+				return undefined;
 			} else {
 				return isEqual(data, aCase.expectation);
 			}
 
 		}
-	};
+	}
 	var isEqual = function(data, expectation) {
 		if (expectation == null) {
 			return true;
@@ -328,8 +326,7 @@ var cartman = (function() {
 			return data == expectation;
 		}
 		return true;
-	};
-	
+	}
 	var getJsonParam = function(params, url) {
 		if (Object.prototype.toString.call(params) == "[object String]") {
 			return params;
@@ -351,7 +348,7 @@ var cartman = (function() {
 						str += '&' + key + '=' + JSON.stringify(authority[key]);
 					}
 				}
-			});
+			})
 		}
 		str = str.replace(/\"/g, '');
 		return str;
@@ -384,7 +381,7 @@ var cartman = (function() {
 			$scope.groups = _cartman_test_data;
 			apply();
 			setTimeout(fn, 100);
-		});
+		})
 	};
 	return {
 		reset: resetData,

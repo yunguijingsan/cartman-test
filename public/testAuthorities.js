@@ -1,13 +1,7 @@
-var _cartman_test_servers = [
-    'localhost:8080'
-]
-var authorizes = [
-{name:"无"}
-]
+var _cartman_test_servers = [ 'localhost:7101', '192.168.30.180:7101','192.168.30.30:7101' ];
+var authorizes = [ {
+	name : "无",
+	authority : {},
+} ];
 
-
-var _cartman_test_authorizes = {
-    username: 'lcf',
-    date: '2014-12-10',
-    token: '564233ea30aa0af67295bd3e2251e12b' //id=150    mobile=13144772861   172.18.33.99
-}
+var _cartman_test_authorizes = {};

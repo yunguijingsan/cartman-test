@@ -8,12 +8,14 @@ function TestAllCrl($http, $scope) {
     $scope.testFiles =[];
     $scope.servers=_cartman_test_servers;
     $scope.authorities=authorizes;
+    $scope.isAsync = true;
+    $scope.selectedServer = _cartman_test_servers[0];
     $http.get("/cartman_test_file").success(function(data){
         $scope.testFiles = data;
         if(data.length>0){
             cartman.executeFile($scope,data[0],init);
         }
-    })
+    });
     $("#start").click(function(){
         var fileName = $("#testFile").val();
         cartman.executeFile($scope,fileName,init);
@@ -21,12 +23,12 @@ function TestAllCrl($http, $scope) {
 }
 $(function () {
      init();
-})
+});
 
 function init() {
     $("#testServer").change(function(){
         _cartman_test_authorizes._cartman_test_server = $(this).val().trim();
-    })
+    });
     _cartman_test_authorizes._cartman_test_server =    $("#testServer").val().trim();
     $("#testAuthorizes").change(function(){
         for(var i=0;i<authorizes.length;i++){
@@ -34,16 +36,16 @@ function init() {
               if(authority.name == $(this).val().trim()){
                   authority._cartman_test_server = _cartman_test_authorizes._cartman_test_server;
                   _cartman_test_authorizes = authority.authority;
-                  _cartman_test_authorizes._cartman_test_server = authority._cartman_test_server
+                  _cartman_test_authorizes._cartman_test_server = authority._cartman_test_server;
                   console.log(_cartman_test_authorizes);
                   break;
               }
         }
         console.log(_cartman_test_authorizes);
         return false;
-    })
+    });
 //    $(".collapse").collapse("show");
-    var isToggle = false;
+//    var isToggle = false;
     $("button[name='group']").click(function () {
         $(".collapse").collapse("toggle");
 //       isToggle =  changeStatus(isToggle,function(){
@@ -57,12 +59,12 @@ function init() {
     var isOnlyDanger = false;
     $("button[name='success']").click(function () {
         isOnlyDanger = changeStatus(isOnlyDanger,function(){
-            $("button[name='success']").text("隐藏成功")
+            $("button[name='success']").text("隐藏成功");
             $("#accordion .panel-success").show();
         },function(){
-            $("button[name='success']").text("显示成功")
+            $("button[name='success']").text("显示成功");
             $("#accordion .panel-success").hide();
-        })
+        });
     });
     var changeStatus = function (flag, trueFun,falseFun) {
         if (flag) {
@@ -71,7 +73,7 @@ function init() {
             falseFun();
         }
         return !flag;
-    }
+    };
 
     $(".a-ul").click(function(){
         $(".a-ul").parent().removeClass("active");
