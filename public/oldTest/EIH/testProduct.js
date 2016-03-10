@@ -1,18 +1,34 @@
 var _cartman_test_data = [
+//		{
+//			name : "CreatePool",
+//			dependencies : [],
+//			stopOnFail : true,
+//			urls : [ {
+//				name : 'Banner',
+//				dependencies : [],
+//				path : 'vipView/test/createPool',
+//				method : 'GET',
+//				cases : [ {
+//					description : 'createPoolTest',
+//					expectation : {
+//						status : 5
+//					},
+//					result : '',
+//				} ]
+//			} ]
+//		},
 		{
 			name : "产品列表",
 			dependencies : [],
 			stopOnFail : true,
 			urls : [
 					{
-						name : "产品上下架",
+						name : "189产品上下架",
 						dependencies : [],
-						path : "vipView/test/pullOnOrOff",
+						path : "vipView/resources/eih/product/changeStatus/189",
 						method : "GET",
 						cases : [ {
-							params : {
-								productHeaderId : 189
-							},
+							params : {},
 							description : "产品上下架",
 							expectation : {
 								status : 1
@@ -20,28 +36,56 @@ var _cartman_test_data = [
 							result : "",
 						} ]
 					},
+//					{
+//						name : "删除产品属性",
+//						dependencies : [],
+//						path : "vipView/resources/eih/product/deleteProductLine",
+//						method : "GET",
+//						cases : [ {
+//							params : {
+//								productHeaderId : 189,
+//							},
+//							description : "删除产品属性 189",
+//							expectation : {
+//								status : 1
+//							},
+//							result : "",
+//						} ]
+//					},
 					{
-						name : "删除产品属性",
+						name : "增加浏览次数189",
 						dependencies : [],
-						path : "vipView/test/deleteProcutEntity",
+						path : "vipView/resources/eih/product/addProductBrowseCount",
 						method : "GET",
 						cases : [ {
 							params : {
-								productHeaderId : 189,
-								lookupType : 'EIH_PRODUCT_COMMISSION',
-								lookupCode : 'PCA'
+								productHeaderId : 189
 							},
-							description : "删除产品属性 189",
+							description : "浏览一次数189",
 							expectation : {
 								status : 1
 							},
 							result : "",
 						} ]
-					},
-					{
+					},{
 						name : "增加浏览次数189",
 						dependencies : [],
-						path : "vipView/test/addProductBrowseCount",
+						path : "vipView/resources/eih/product/addProductBrowseCount",
+						method : "GET",
+						cases : [ {
+							params : {
+								productHeaderId : 189
+							},
+							description : "浏览一次数189",
+							expectation : {
+								status : 1
+							},
+							result : "",
+						} ]
+					},{
+						name : "增加浏览次数189",
+						dependencies : [],
+						path : "vipView/resources/eih/product/addProductBrowseCount",
 						method : "GET",
 						cases : [ {
 							params : {
@@ -55,29 +99,9 @@ var _cartman_test_data = [
 						} ]
 					},
 					{
-						name : "updateOrderService",
-						dependencies : [],
-						path : "vipView/test/updateOrderService",
-						method : "GET",
-						cases : [ {
-							params : {
-								serviceId : 118,
-								serviceStatus : 'HANDLING',
-								currentAccountName : 'lcf',
-								saleId : 294,
-								saleLineId : 1006
-							},
-							description : "updateOrderService",
-							expectation : {
-								status : 1
-							},
-							result : "",
-						} ]
-					},
-					{
 						name : "全部产品列表",
 						dependencies : [],
-						path : "vipView/test/listProducts",
+						path : "vipView/resources/eih/product/listProducts",
 						method : "GET",
 						cases : [
 								{
@@ -151,20 +175,6 @@ var _cartman_test_data = [
 									success : function(data) {
 										return isProductEffective(data.data.data);
 									}
-								},
-								{
-									params : {
-										effective : false
-									},
-									description : "全部产品 无效记录N",
-									expectation : {
-										status : 1
-									},
-									result : "",
-									success : function(data) {
-										console.log(data);
-										return isProductEffective(data.data.data);
-									}
 								}
 
 						]
@@ -172,7 +182,7 @@ var _cartman_test_data = [
 					{
 						name : "按品牌列表2",
 						dependencies : [],
-						path : "vipView/test/listProducts",
+						path : "vipView/resources/eih/product/listProducts",
 						method : "GET",
 						cases : [
 								{
@@ -217,7 +227,7 @@ var _cartman_test_data = [
 					{
 						name : "全部产品列表",
 						dependencies : [],
-						path : "vipView/test/listProducts",
+						path : "vipView/resources/eih/product/listProducts",
 						method : "GET",
 						cases : [
 								{
@@ -260,7 +270,7 @@ var _cartman_test_data = [
 					{
 						name : "按品牌列表",
 						dependencies : [],
-						path : "vipView/test/listProducts",
+						path : "vipView/resources/eih/product/listProducts",
 						method : "GET",
 						cases : [
 								{

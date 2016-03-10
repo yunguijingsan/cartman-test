@@ -1,12 +1,10 @@
 var cartman = (function() {
 	var STATUS = {
-		SUCCESS: 'success',
-		DEFAULT: 'default',
-		DANGER: 'danger'
+		SUCCESS : 'success',
+		DEFAULT : 'default',
+		DANGER : 'danger'
 	};
-	var currentGroup = 0,
-		currentUrl = 0,
-		currentCase = -1;
+	var currentGroup = 0, currentUrl = 0, currentCase = -1;
 	var _groups = [];
 	var _$scope = {};
 
@@ -35,30 +33,30 @@ var cartman = (function() {
 			}
 		});
 		_$scope.runStepCount = count;
-		//        executeNext();
-		//        _groups.forEach(function(group){
-		//            executeGroup(group);
-		//        })
+		// executeNext();
+		// _groups.forEach(function(group){
+		// executeGroup(group);
+		// })
 		apply();
 
 	};
-//	var executeGroup = function(group) {
-//		if (group.state != STATUS.DEFAULT) {
-//			return;
-//		}
-//		var state = STATUS.SUCCESS;
-//		group.dependencies.forEach(function(g) {
-//			if (getGroupState(g.name, group) != STATUS.SUCCESS) {
-//				state = STATUS.DANGER;
-//				return;
-//			}
-//		});
-//		if (state == STATUS.SUCCESS) {
-//			group.urls.forEach(function(url) {
-//				executeUrl(url, group);
-//			});
-//		}
-//	};
+	// var executeGroup = function(group) {
+	// if (group.state != STATUS.DEFAULT) {
+	// return;
+	// }
+	// var state = STATUS.SUCCESS;
+	// group.dependencies.forEach(function(g) {
+	// if (getGroupState(g.name, group) != STATUS.SUCCESS) {
+	// state = STATUS.DANGER;
+	// return;
+	// }
+	// });
+	// if (state == STATUS.SUCCESS) {
+	// group.urls.forEach(function(url) {
+	// executeUrl(url, group);
+	// });
+	// }
+	// };
 	var getGroupState = function(groupName, currentG) {
 		var state = STATUS.DEFAULT;
 		var isExist = false;
@@ -69,7 +67,8 @@ var cartman = (function() {
 			}
 		});
 		if (!isExist) {
-			alert(groupName + " that " + currentG.name + " depend on is not present");
+			alert(groupName + " that " + currentG.name
+					+ " depend on is not present");
 		}
 		return state;
 	};
@@ -83,61 +82,62 @@ var cartman = (function() {
 			}
 		});
 		if (!isExist) {
-			alert(uName + " that " + currentU.name + " depend on is not present");
+			alert(uName + " that " + currentU.name
+					+ " depend on is not present");
 		}
 		return state;
 	};
-//	var executeUrl = function(url, group) {
-//		if (url.state != STATUS.DEFAULT) {
-//			return;
-//		}
-//		var st = STATUS.SUCCESS;
-//		url.dependencies.forEach(function(u) {
-//			if (getUrlState(group, u, url) != STATUS.SUCCESS) {
-//				st = STATUS.DANGER;
-//				return;
-//			}
-//		});
-//		if (st == STATUS.SUCCESS) {
-//			url.cases.forEach(function(cas) {
-//				executeCase(cas, url, group);
-//			});
-//		}
-//	};
-//	var executeCase = function(aCase, url, group) {
-//		if (aCase.state != STATUS.DEFAULT) {
-//			return;
-//		}
-//		$.ajax({
-//			url: url.path,
-//			type: url.method,
-//			data: aCase.params,
-//			success: function(data) {
-//				if (data == aCase.expectation) {
-//					aCase.state = "success";
-//					aCase.result = data;
-//				} else {
-//					aCase.state = "danger";
-//					if (data.contains("<html>")) {
-//						aCase.result = $(data);
-//					} else {
-//						aCase.result = data;
-//					}
-//				}
-//				applyUrl(url, group);
-//			},
-//			error: function(xhr) {
-//				aCase.state = "danger";
-//				aCase.result = xhr.responseText;
-//				applyUrl(url, group);
-//			}
-//		});
-//	};
+	// var executeUrl = function(url, group) {
+	// if (url.state != STATUS.DEFAULT) {
+	// return;
+	// }
+	// var st = STATUS.SUCCESS;
+	// url.dependencies.forEach(function(u) {
+	// if (getUrlState(group, u, url) != STATUS.SUCCESS) {
+	// st = STATUS.DANGER;
+	// return;
+	// }
+	// });
+	// if (st == STATUS.SUCCESS) {
+	// url.cases.forEach(function(cas) {
+	// executeCase(cas, url, group);
+	// });
+	// }
+	// };
+	// var executeCase = function(aCase, url, group) {
+	// if (aCase.state != STATUS.DEFAULT) {
+	// return;
+	// }
+	// $.ajax({
+	// url: url.path,
+	// type: url.method,
+	// data: aCase.params,
+	// success: function(data) {
+	// if (data == aCase.expectation) {
+	// aCase.state = "success";
+	// aCase.result = data;
+	// } else {
+	// aCase.state = "danger";
+	// if (data.contains("<html>")) {
+	// aCase.result = $(data);
+	// } else {
+	// aCase.result = data;
+	// }
+	// }
+	// applyUrl(url, group);
+	// },
+	// error: function(xhr) {
+	// aCase.state = "danger";
+	// aCase.result = xhr.responseText;
+	// applyUrl(url, group);
+	// }
+	// });
+	// };
 	var applyUrl = function(url, group) {
 		var i = 0;
 		url.cases.forEach(function(cas) {
 			if (cas.state == STATUS.DEFAULT) {
-				//                executeCase(cas,url,group);
+				// executeCase(cas,url,group);
 			} else {
 				if (cas.state == STATUS.DANGER) {
 					url.state = STATUS.DANGER;
@@ -157,21 +157,21 @@ var cartman = (function() {
 	var applyGroup = function(group) {
 		var i = 0;
 		group.urls.forEach(function(url) {
-			//          if (url.state == STATUS.DEFAULT) {
-			//                executeUrl(url,group);
-			//          } else {
-			//              if (url.state == STATUS.DANGER) {
-			//                  group.state = STATUS.DANGER;
-			//                  return;
-			//              }
+			// if (url.state == STATUS.DEFAULT) {
+			// executeUrl(url,group);
+			// } else {
+			// if (url.state == STATUS.DANGER) {
+			// group.state = STATUS.DANGER;
+			// return;
+			// }
 			if (url.state == STATUS.DANGER) {
-					group.state = STATUS.DANGER;
-					return;
+				group.state = STATUS.DANGER;
+				return;
 			}
 			if (url.state == STATUS.SUCCESS) {
 				i++;
 			}
-			//          }
+			// }
 		});
 		if (i == group.urls.length) {
 			group.state = STATUS.SUCCESS;
@@ -199,7 +199,9 @@ var cartman = (function() {
 			currentGroup++;
 			var state = STATUS.SUCCESS;
 			var group = _groups[currentGroup];
-			if (group.dependencies != undefined && group.dependencies instanceof Array && group.dependencies.length > 0) {
+			if (group.dependencies != undefined
+					&& group.dependencies instanceof Array
+					&& group.dependencies.length > 0) {
 				group.dependencies.forEach(function(groupName) {
 					if (getGroupState(groupName, group) != STATUS.SUCCESS) {
 						state = STATUS.DANGER;
@@ -225,7 +227,8 @@ var cartman = (function() {
 		var st = STATUS.SUCCESS;
 		var group = _groups[currentGroup];
 		var url = group.urls[currentUrl];
-		if (url.dependencies != undefined && url.dependencies instanceof Array && url.dependencies.length > 0) {
+		if (url.dependencies != undefined && url.dependencies instanceof Array
+				&& url.dependencies.length > 0) {
 			url.dependencies.forEach(function(u) {
 				if (getUrlState(group, u, url) != STATUS.SUCCESS) {
 					st = STATUS.DANGER;
@@ -239,14 +242,14 @@ var cartman = (function() {
 			return nextUrl();
 		}
 	};
-	
-	var getCurrentGroup = function (){
+
+	var getCurrentGroup = function() {
 		return _groups[currentGroup];
 	};
-	var getCurrentUrl = function(group){
+	var getCurrentUrl = function(group) {
 		return group.urls[currentUrl];
 	};
-	var getCurrentCase = function(url){
+	var getCurrentCase = function(url) {
 		return url.cases[currentCase];
 	};
 	var executeNext = function() {
@@ -254,53 +257,83 @@ var cartman = (function() {
 			return false;
 		}
 		var group = getCurrentGroup();
-		var url =getCurrentUrl(group);
+		var url = getCurrentUrl(group);
 		var aCase = getCurrentCase(url);
 		if (aCase.state != STATUS.DEFAULT) {
 			return;
 		}
+
+		if (url.method == 'GET' || url.method == 'get') {
+			proxyGet(url, aCase, group);
+		} else {
+			proxyPost(url, aCase, group);
+		}
+		executeNext();
+	};
+	var proxyPost = function(url, aCase, group) {
 		$.ajax({
-			url: url.path +"?_cartman_test_server="+_$scope.selectedServer,
-			type: url.method,
-			async: _$scope.isAsync,
-			data: getJsonParam(aCase.params, url),
-			success: function(data) {
-				aCase.result = JSON.stringify(data, null, " ");
-				_$scope.stepCount++;
-				if(isSuccess(url,aCase,data)){
-					aCase.state = STATUS.SUCCESS;
-				}else{
-					aCase.state = STATUS.DANGER;
-				}
-				applyUrl(url, group);
+			url : "http://" + _$scope.selectedServer + "/" + url.path,
+			type : url.method,
+			async : _$scope.isAsync,
+			data : JSON.stringify(aCase.params),
+			contentType: "application/json; charset=utf-8",
+			dataType:'json',
+			success : function(data) {
+				requestSucess(data,aCase,url,group);
 			},
-			error: function(xhr) {
-				if (aCase.expectation == null) {
-					aCase.state = STATUS.SUCCESS;
-					aCase.result = xhr.responseText;
-				} else {
-					aCase.state = STATUS.DANGER;
-					aCase.result = xhr.responseText;
-					if (url.fail && url.fail instanceof Function) {
-						try {
-							url.fail(data);
-						} catch (e) {
-							console.log(e);
-						}
-					}
-				}
-				_$scope.stepCount++;
-				applyUrl(url, group);
-				
+			error : function(xhr) {
+				requestFail(data,aCase,url,group,xhr);
 			}
 		});
+	};
+	var proxyGet = function(url, aCase, group) {
+		$.ajax({
+			url : "http://" + _$scope.selectedServer + "/" + url.path,
+			type : "GET",
+			async : _$scope.isAsync,
+			dataType:'json',
+			data : getJsonParam(aCase.params, url),
+			success : function(data) {
+				requestSucess(data,aCase,url,group);
+			},
+			error : function(xhr) {
+				requestFail(data,aCase,url,group,xhr);
+			}
+		});
+	};
+	var requestSucess = function(data,aCase,url,group){
+		aCase.result = data;// JSON.stringify(data, null, " ");
+		_$scope.stepCount++;
+		if (isSuccess(url, aCase, data)) {
+			aCase.state = STATUS.SUCCESS;
+		} else {
+			aCase.state = STATUS.DANGER;
+		}
+		applyUrl(url, group);
 		
-		executeNext();
+	};
+	var requestFail = function(data,aCase,url,group,xhr){
+		if (aCase.expectation == null) {
+			aCase.state = STATUS.SUCCESS;
+			aCase.result = xhr.responseText;
+		} else {
+			aCase.state = STATUS.DANGER;
+			aCase.result = xhr.responseText;
+			if (url.fail && url.fail instanceof Function) {
+				try {
+					url.fail(data);
+				} catch (e) {
+					console.log(e);
+				}
+			}
+		}
+		_$scope.stepCount++;
+		applyUrl(url, group);
 	};
 	var isSuccess = function(url, aCase, data) {
 		if (aCase.success && aCase.success instanceof Function) {
-				return aCase.success(data);
-			
+			return aCase.success(data);
+
 		} else {
 			if (url.success && url.success instanceof Function) {
 				return url.success(data);
@@ -316,7 +349,7 @@ var cartman = (function() {
 		}
 		if (expectation instanceof Object) {
 			try {
-				for (var key in expectation) {
+				for ( var key in expectation) {
 					if (!isEqual(data[key], expectation[key])) {
 						return false;
 					}
@@ -329,41 +362,45 @@ var cartman = (function() {
 		}
 		return true;
 	};
-	
+
 	var getJsonParam = function(params, url) {
 		if (Object.prototype.toString.call(params) == "[object String]") {
 			return params;
 		}
 		var str = '';
-		for (var key in params) {
+		for ( var key in params) {
 			if (str == '') {
 				str += key + '=' + JSON.stringify(params[key]);
 			} else {
 				str += '&' + key + '=' + JSON.stringify(params[key]);
 			}
 		}
-		if (url.authorities != undefined && url.authorities instanceof Array && url.authorities.length > 0) {
-			url.authorities.forEach(function(authority) {
-				for (var key in authority) {
-					if (str == '') {
-						str += key + '=' + JSON.stringify(authority[key]);
-					} else {
-						str += '&' + key + '=' + JSON.stringify(authority[key]);
-					}
-				}
-			});
+		if (url.authorities != undefined && url.authorities instanceof Array
+				&& url.authorities.length > 0) {
+			url.authorities
+					.forEach(function(authority) {
+						for ( var key in authority) {
+							if (str == '') {
+								str += key + '='
+										+ JSON.stringify(authority[key]);
+							} else {
+								str += '&' + key + '='
+										+ JSON.stringify(authority[key]);
+							}
+						}
+					});
 		}
 		str = str.replace(/\"/g, '');
 		return str;
 	};
 	var createUUID = (function(uuidRegEx, uuidReplacer) {
 		return function() {
-			return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(uuidRegEx, uuidReplacer).toUpperCase();
+			return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(uuidRegEx,
+					uuidReplacer).toUpperCase();
 		};
 
 	})(/[xy]/g, function(c) {
-		var r = Math.random() * 16 | 0,
-			v = c == 'x' ? r : (r & 3 | 8);
+		var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 3 | 8);
 		return v.toString(16);
 	});
 
@@ -371,15 +408,28 @@ var cartman = (function() {
 		init($scope, data);
 		executeNext();
 	};
-
+	// var repeatData = function (data){
+	// var temp = data;
+	// console.log(data);
+	// data = new Array();
+	// for(var i=0;i<1;i++){
+	// for(var j=0;j<temp.length;j++){
+	// data.push(temp[i]);
+	// }
+	// }
+	// return data;
+	// };
 	var executeFile = function($scope, fileName, fn) {
 		if (!fileName || fileName.trim().length == 0) {
+			// _cartman_test_data = repeatData(_cartman_test_data);
 			resetData($scope, _cartman_test_data);
 			$scope.groups = _cartman_test_data;
 			setTimeout(fn, 100);
 			return;
 		}
 		$.getScript('test/' + fileName, function() {
+			// _cartman_test_data = repeatData(_cartman_test_data);
+			console.log(_cartman_test_data);
 			resetData($scope, _cartman_test_data);
 			$scope.groups = _cartman_test_data;
 			apply();
@@ -387,10 +437,10 @@ var cartman = (function() {
 		});
 	};
 	return {
-		reset: resetData,
-		init: init,
-		status: STATUS,
-		execute: executeNext,
-		executeFile: executeFile
+		reset : resetData,
+		init : init,
+		status : STATUS,
+		execute : executeNext,
+		executeFile : executeFile
 	};
 })();
