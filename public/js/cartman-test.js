@@ -312,7 +312,7 @@ var cartman = (function() {
 		applyUrl(url, group);
 		
 	};
-	var requestFail = function(data,aCase,url,group,xhr){
+	var requestFail = function(aCase,url,group,xhr){
 		if (aCase.expectation == null) {
 			aCase.state = STATUS.SUCCESS;
 			aCase.result = xhr.responseText;
@@ -321,7 +321,7 @@ var cartman = (function() {
 			aCase.result = xhr.responseText;
 			if (url.fail && url.fail instanceof Function) {
 				try {
-					url.fail(data);
+					url.fail(xhr.data);
 				} catch (e) {
 					console.log(e);
 				}
